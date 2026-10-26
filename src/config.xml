@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets"
-        id="http://aivo.tv/launcher" version="1.0.0" viewmodes="maximized">
+        id="http://aivo.tv/launcher" version="1.0.2" viewmodes="maximized">
     <!-- package must be exactly 10 alphanumeric characters -->
     <!-- KEEP THIS APPLICATION ID STABLE: updates install over the existing app only while the id
          (and the signing certificate) stay the same, which is what keeps your saved settings. -->

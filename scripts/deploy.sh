@@ -9,6 +9,11 @@
 #   --no-install     stop after signing (dist/aivo-signed.wgt)
 #   --no-launch      install but do not open the app
 #   --profile NAME   certificate profile to sign with (default: aivo)
+#   --no-bump        keep the current version number
+#
+# Every install raises the patch version (1.0.1 -> 1.0.2) in src/config.xml and package.json. The
+# TV keys its cached icon and app files on that number: reinstalling the same version leaves the
+# old icon showing. Commit the bumped files along with your change.
 #
 # The address is remembered in .tv-address (gitignored). The TV must be in Developer Mode with this
 # Mac's IP entered, and the certificate profile must exist (docs/setup-tv.md, steps 2–6).
@@ -21,6 +26,7 @@ PROFILE="aivo"
 RUN_TESTS=1
 INSTALL=1
 LAUNCH=1
+BUMP=1
 TV=""
 
 while [ $# -gt 0 ]; do
@@ -28,6 +34,7 @@ while [ $# -gt 0 ]; do
         --skip-tests) RUN_TESTS=0 ;;
         --no-install) INSTALL=0; LAUNCH=0 ;;
         --no-launch) LAUNCH=0 ;;
+        --no-bump) BUMP=0 ;;
         --profile) PROFILE="${2:?--profile needs a name}"; shift ;;
         -h|--help) awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "$0"; exit 0 ;;
         -*) echo "Unknown option: $1 (try --help)" >&2; exit 2 ;;
@@ -69,7 +76,21 @@ if [ "$RUN_TESTS" = 1 ]; then
     rm -f dist/test.log
 fi
 
-step "Building"
+VERSION="$(sed -n 's/.* version="\([0-9]*\.[0-9]*\.[0-9]*\)" viewmodes.*/\1/p' src/config.xml | head -1)"
+[ -n "$VERSION" ] || fail "could not read the version from src/config.xml."
+# Only when installing: a build that never reaches the TV does not need a new number.
+if [ "$INSTALL" = 1 ] && [ "$BUMP" = 1 ]; then
+    NEW="${VERSION%.*}.$(( ${VERSION##*.} + 1 ))"
+    # Tizen allows at most 65535 in the last place.
+    [ "${NEW##*.}" -le 65535 ] || fail "patch version $NEW is too large; raise the minor version by hand."
+    sed -i '' "s/version=\"$VERSION\" viewmodes/version=\"$NEW\" viewmodes/" src/config.xml
+    grep -q "version=\"$NEW\" viewmodes" src/config.xml || fail "could not update the version in src/config.xml."
+    npm version "$NEW" --no-git-tag-version --allow-same-version > /dev/null
+    step "Version $VERSION -> $NEW"
+    VERSION="$NEW"
+fi
+
+step "Building version $VERSION"
 sh scripts/build.sh > /dev/null
 echo "dist/aivo-launcher.wgt"
 
@@ -106,6 +127,12 @@ sdb devices | grep "^$TARGET"
 
 step "Installing $APP_ID"
 OUT="$(tizen install -n aivo-signed.wgt -s "$TARGET" -- dist 2>&1 || true)"
+# The sdb background server sometimes drops the TV between steps; reconnect and try once more.
+if printf '%s' "$OUT" | grep -q 'no connected target'; then
+    echo "Connection dropped; reconnecting."
+    sdb connect "$TARGET" > /dev/null 2>&1 || true
+    OUT="$(tizen install -n aivo-signed.wgt -s "$TARGET" -- dist 2>&1 || true)"
+fi
 if ! printf '%s' "$OUT" | grep -q 'successfully installed'; then
     printf '%s\n' "$OUT" | grep -vE 'installing\[[0-9]+\]'
     fail "the TV refused the install (output above). See the troubleshooting table in docs/setup-tv.md."

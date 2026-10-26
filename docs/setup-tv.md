@@ -135,7 +135,11 @@ npm run deploy                      # every time after
 
 It stops with a plain message at the first thing that goes wrong (tests failing, signing, the TV
 not connected, the install refused). Options, after `--`: `--skip-tests`, `--no-install` (build
-and sign only), `--no-launch`, `--profile NAME`. `npm run deploy -- --help` lists them.
+and sign only), `--no-launch`, `--profile NAME`, `--no-bump`. `npm run deploy -- --help` lists them.
+
+Each install raises the patch version (1.0.1 → 1.0.2) in `src/config.xml` and `package.json`.
+The TV caches an app's icon and files by version number, so reinstalling the same version can
+leave the old icon on screen. Commit the two bumped files along with your change.
 
 What the script runs, if you ever need the steps by hand:
 
@@ -178,6 +182,7 @@ erases them. If the TV's address changes (a new router, say), pass the new one o
 | *Tizen Studio programs are running under installed location* | close the Package Manager window, then retry |
 | `sdb devices` is empty | step 4 |
 | *Failed to install Tizen application* with no reason | the file name has a space: step 7's `mv` |
+| The TV still shows the old icon after an install | the version did not change: deploy without `--no-bump`, or raise it in `src/config.xml` |
 | Install refused / certificate error | DUID missing from the `aivo` profile (step 5) or step 6 not done |
 | The preview page will not load after Ctrl+Z | `fg` to resume it, or `kill %1`; stop it with Ctrl+C |
 | A blank or broken screen on the TV | set `devLogUrl: 'http://<Mac-IP>:8099/log'` in `config.local.js`, run `npm run devlog`, rebuild, reinstall and run the Lab; the log lands in `logs/tv.jsonl` |
