@@ -57,7 +57,8 @@
                 </div>
                 <div id="bg-photos-block" class="setting-block">
                     <h2>Photo</h2>
-                    <div id="bg-photos" class="thumbs"></div>
+                    <!-- Two rows visible; more scroll (UI.ensureVisible moves the .vtrack). -->
+                    <div class="thumbs-port"><div id="bg-photos" class="thumbs vtrack"></div></div>
                 </div>
             </div>
         </section>

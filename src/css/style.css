@@ -708,6 +708,21 @@ h1, h2 {
     font-size: 0;
 }
 
+/*
+ * Exactly two rows of thumbnails fit between the heading and the hint bar: 186 + 26 + 186 =
+ * 398px, so a scrolled view starts on a row boundary instead of showing a sliver of the row
+ * above. With more than twelve photos the rest scroll into view as focus moves down. The 10px of
+ * padding on top and left is room for the focused thumbnail's scale and ring, which overflow:
+ * hidden would otherwise clip; the negative margins keep the grid where it was.
+ */
+.thumbs-port {
+    height: 408px;
+    margin: -10px 0 0 -10px;
+    padding: 10px 0 0 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
 .thumb {
     display: inline-block;
     vertical-align: top;
