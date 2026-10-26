@@ -1,6 +1,6 @@
 {
   "name": "aivo-tv-launcher",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "Aivo Launcher: a quiet home screen for Samsung Tizen TVs, 2016 (Tizen 2.4) and newer",
   "scripts": {
