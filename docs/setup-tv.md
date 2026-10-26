@@ -1,14 +1,14 @@
 # Putting it on a Samsung TV
 
-From a fresh Mac to the launcher running on the TV. Written for a 2016 Samsung (Tizen 2.4, e.g.
-the UE65KU7020) and Tizen SDK 10 on macOS; newer Samsung TVs follow the same steps. Installing is
-reversible: uninstall the app and the TV is exactly as it was.
+From a fresh Mac to the launcher running on the TV. Done end to end on a UE65RU7020 (2019,
+Tizen 5.0) with Tizen SDK 10 on macOS; other Samsung TVs from 2016 on follow the same steps.
+Installing is reversible: uninstall the app and the TV is exactly as it was.
 
 You need:
 
 - a Mac and the TV on the **same network**
 - a **Samsung account** (for the signing certificate)
-- the TV's remote. A 2016 Smart Remote has no number keys: its **123** button shows a number pad
+- the TV's remote. If it has no number keys (a Smart Remote), its **123** button shows a number pad
 
 New terminal windows start in your home folder, so begin every session with
 `cd ~/Documents/aivo-tv`. If `npm` says it cannot find `package.json`, that is the reason.
@@ -90,7 +90,7 @@ sdb connect 192.168.1.20:26101
 sdb devices
 ```
 
-`sdb devices` must list the TV, e.g. `192.168.1.20:26101   device   UE65KU7020`. An empty list
+`sdb devices` must list the TV, e.g. `192.168.1.20:26101   device   UE65RU7020KXXU`. An empty list
 means it is not connected: check Developer Mode, the Mac IP entered on the TV, and that both are
 on the same network, then restart the TV and try again. **Do not continue until the TV is listed.**
 
@@ -128,12 +128,13 @@ Right-click the TV and choose **Permit to install applications**.
 cd ~/Documents/aivo-tv
 rm -rf dist/pkg && mkdir dist/pkg && (cd dist/pkg && unzip -q ../aivo-launcher.wgt)
 tizen package -t wgt -s aivo -- dist/pkg
-ls dist/pkg/*.wgt
-tizen install -n "Aivo Launcher.wgt" -s 192.168.1.20:26101 -- dist/pkg
+mv "dist/pkg/Aivo Launcher.wgt" dist/aivo-signed.wgt
+tizen install -n aivo-signed.wgt -s 192.168.1.20:26101 -- dist
 ```
 
-Use your device name from `sdb devices` after `-s`. If `ls` shows a different file name, use it
-after `-n`.
+Use your device name from `sdb devices` after `-s`. The `mv` matters: `tizen package` names the
+signed file after the app, with a space, and the TV's installer fails on a path containing a
+space with nothing more than *Failed to install Tizen application*.
 
 ## 8. Open it
 
@@ -159,6 +160,7 @@ Installing over the existing app keeps its settings; uninstalling first erases t
 | *Cannot connect the repository server* | step 3.3 |
 | *Tizen Studio programs are running under installed location* | close the Package Manager window, then retry |
 | `sdb devices` is empty | step 4 |
+| *Failed to install Tizen application* with no reason | the file name has a space: step 7's `mv` |
 | Install refused / certificate error | DUID missing from the `aivo` profile (step 5) or step 6 not done |
 | The preview page will not load after Ctrl+Z | `fg` to resume it, or `kill %1`; stop it with Ctrl+C |
 | A blank or broken screen on the TV | set `devLogUrl: 'http://<Mac-IP>:8099/log'` in `config.local.js`, run `npm run devlog`, rebuild, reinstall and run the Lab; the log lands in `logs/tv.jsonl` |

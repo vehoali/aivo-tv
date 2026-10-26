@@ -7,10 +7,17 @@ consoles, and nothing else. It installs as an ordinary app and is opened from th
 
 *The browser preview, with the bundled Manrope font and the "Milky Way" wallpaper.*
 
-Built for Samsung TVs from 2016 onward. The 2016 range (Tizen 2.4, e.g. the UE65KU7020) runs a
-2013-era WebKit engine, so the launcher carries a small compatibility layer for it and is tested
-against a model of that engine as well as a modern one. Newer Samsung TVs run the same package
-unchanged.
+Built for Samsung TVs from 2016 onward, and installed and running on a UE65RU7020 (2019,
+Tizen 5.0). The package accepts Tizen 2.3 and up. The 2016 range (Tizen 2.4) runs a 2013-era
+WebKit engine, so the launcher carries a small compatibility layer for it, tested against a model
+of that engine; on 2017 and later TVs, which run Chromium, the layer switches itself off.
+
+| | |
+| --- | --- |
+| Reference TV | UE65RU7020KXXU (RU7020, 2019), Tizen 5.0, armv7, web engine Chromium M63 |
+| Install | Tizen SDK 10 CLI on macOS, Samsung certificate, `tizen install` over `sdb`: works |
+| 2016 TVs (Tizen 2.4) | Supported by the compatibility layer; not yet run on real 2016 hardware |
+| Original | Arn0 Launcher on a 2022 Q70B (Tizen 6.5, Chromium M85) |
 
 Based on [Arn0 Launcher](https://github.com/NelsonEU/arn0-tv) by Arnaud Etienne (MIT).
 
@@ -88,7 +95,8 @@ python3 scripts/make-static-fonts.py           # only if a font or weight change
 | Back | one level back (does nothing on Home) |
 
 Colour-key shortcuts: Red = All apps, Green = next wallpaper, Yellow (in All apps) = show system
-apps, Blue = Lab. The 2016 Smart Remote has no colour buttons; its on-screen pad (**123**) does.
+apps, Blue = Lab. If your remote has no colour buttons, its on-screen pad (**123**)
+may offer them.
 On Home, Left and Right alternating three times (◀ ▶ ◀ ▶ ◀ ▶) starts a hidden game.
 
 ### Layout
@@ -178,8 +186,9 @@ The dot on each tile is green when the TV reports that port as connected.
 
 The Lab's **Render probe** measures what the TV can draw. On the original author's 2022 Q70B,
 blurred shadows were free and large live gradients were ruinous (4.6 fps), so gradients are baked
-into the wallpapers at build time. A 2016 TV is slower; run the probe on yours before adding
-effects. Only `transform` and `opacity` animate.
+into the wallpapers at build time. The 2019 RU7020 has an older engine (Chromium M63) and a
+slower chip than that, and a 2016 TV slower still; run the probe on yours before adding effects.
+Only `transform` and `opacity` animate.
 
 ### Privileges
 

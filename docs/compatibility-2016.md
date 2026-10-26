@@ -1,9 +1,19 @@
 # 2016 TVs (Tizen 2.4): compatibility notes
 
-Arn0 Launcher, which this is based on, was written on a 2022 Q70B (Chromium 85). Aivo Launcher
-also targets the 2016 range, tested against a model of a UE65KU7020 (firmware `T-MSLDEUC`). Those
-TVs run Tizen 2.4, and Samsung lists their web engine as **WebKit r152340**, a mid-2013 build,
-roughly Safari 7.
+Arn0 Launcher, which this is based on, was written on a 2022 Q70B (Chromium M85). Aivo Launcher
+also targets the 2016 range, which runs Tizen 2.4 with a web engine Samsung lists as **WebKit
+r152340**, a mid-2013 build, roughly Safari 7.
+
+**Status.** The port was made for a TV first thought to be a 2016 KU7020. It turned out to be a
+**UE65RU7020 (2019, Tizen 5.0, Chromium M63)**, on which the launcher is installed and runs; there
+the compatibility layer finds everything it checks for and installs nothing. The 2016 support
+below is therefore tested only against a model of the 2016 engine, not yet on 2016 hardware.
+
+| Model year | Tizen | Web engine (Samsung spec) | Status |
+| --- | --- | --- | --- |
+| 2016 | 2.4 | WebKit r152340 | modelled in `npm test`; untested on hardware |
+| 2019 | 5.0 | Chromium M63 | installed and running (UE65RU7020) |
+| 2022 | 6.5 | Chromium M85 | the original Arn0 Launcher's reference TV |
 
 Installation is in [setup-tv.md](setup-tv.md). This page covers what was changed for the old
 engine, what to check once it is on the TV, and what could not be verified without one.
