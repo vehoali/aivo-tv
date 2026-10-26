@@ -11,12 +11,12 @@ You need:
 - the TV's remote. If it has no number keys (a Smart Remote), its **123** button shows a number pad
 
 New terminal windows start in your home folder, so begin every session with
-`cd ~/Documents/aivo-tv`. If `npm` says it cannot find `package.json`, that is the reason.
+`cd ~/Projects/aivo-tv`. If `npm` says it cannot find `package.json`, that is the reason.
 
 ## 1. Build the package on the Mac
 
 ```sh
-cd ~/Documents/aivo-tv
+cd ~/Projects/aivo-tv
 npm install
 npm test                 # expect: pass 77, fail 0
 cp src/js/config.local.example.js src/js/config.local.js    # first time only
@@ -124,8 +124,23 @@ Right-click the TV and choose **Permit to install applications**.
 
 ## 7. Sign and install
 
+One command does it all: tests, build, sign, connect, install, and open the app on the TV. Give
+the TV's address the first time; it is remembered in `.tv-address` (gitignored) after that.
+
 ```sh
-cd ~/Documents/aivo-tv
+cd ~/Projects/aivo-tv
+npm run deploy -- 192.168.1.20     # first time
+npm run deploy                      # every time after
+```
+
+It stops with a plain message at the first thing that goes wrong (tests failing, signing, the TV
+not connected, the install refused). Options, after `--`: `--skip-tests`, `--no-install` (build
+and sign only), `--no-launch`, `--profile NAME`. `npm run deploy -- --help` lists them.
+
+What the script runs, if you ever need the steps by hand:
+
+```sh
+npm run build
 rm -rf dist/pkg && mkdir dist/pkg && (cd dist/pkg && unzip -q ../aivo-launcher.wgt)
 tizen package -t wgt -s aivo -- dist/pkg
 mv "dist/pkg/Aivo Launcher.wgt" dist/aivo-signed.wgt
@@ -147,14 +162,16 @@ row, a console tile, the screen saver and the sound.
 
 ## Updating
 
-After any change: `npm run build`, then step 7 again, always with the same `aivo` profile.
-Installing over the existing app keeps its settings; uninstalling first erases them.
+After any change: `npm run deploy`. It signs with the same `aivo` profile every time, which is
+what the TV requires. Installing over the existing app keeps its settings; uninstalling first
+erases them. If the TV's address changes (a new router, say), pass the new one once:
+`npm run deploy -- <new-ip>`.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 | --- | --- |
-| `npm` cannot find `package.json` | `cd ~/Documents/aivo-tv` first |
+| `npm` cannot find `package.json` | `cd ~/Projects/aivo-tv` first |
 | `zsh: command not found: sdb` | `source ~/.zshrc`, or open a new terminal window |
 | `no such file or directory: TV-IP` | replace the placeholder with the real IP, without `< >` |
 | *Cannot connect the repository server* | step 3.3 |

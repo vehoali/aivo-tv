@@ -12,7 +12,7 @@ const read = (p) => readFile(resolve(SRC, p), 'utf8');
 const exists = (p) => access(p).then(() => true, () => false);
 
 async function jsFiles() {
-    return (await readdir(resolve(SRC, 'js'))).filter((f) => f.endsWith('.js') && f !== 'config.local.js');
+    return (await readdir(resolve(SRC, 'js'))).filter((f) => f.endsWith('.js') && f !== 'config.local.js' && f !== 'wallpapers.local.js');
 }
 
 // Strips comments so a rule does not fire on prose that mentions the feature.
@@ -125,7 +125,7 @@ test('index.html loads compat.js first and every script exists', async () => {
     const scripts = [...html.matchAll(/<script src="([^"]+)"/g)].map((m) => m[1]);
     assert.equal(scripts[0], 'js/compat.js');
     for (const s of scripts) {
-        if (s === 'js/config.local.js') continue;
+        if (/^js\/(config|wallpapers)\.local\.js$/.test(s)) continue;
         assert.ok(await exists(resolve(SRC, s)), 'missing ' + s);
     }
     assert.equal(new Set(scripts).size, scripts.length, 'a script is listed twice');
@@ -152,6 +152,14 @@ test('the static fonts are real WOFF 1.0 files', async () => {
     for (const f of files) {
         const head = (await readFile(resolve(dir, f))).subarray(0, 4).toString('latin1');
         assert.equal(head, 'wOFF', f + ' is not WOFF 1.0');
+    }
+});
+
+test('personal files are gitignored', async () => {
+    const ignore = await readFile(resolve(ROOT, '.gitignore'), 'utf8');
+    for (const p of ['src/js/config.local.js', 'src/js/wallpapers.local.js', 'src/img/wallpapers/local/',
+        '.tv-address', '*.p12']) {
+        assert.ok(ignore.split('\n').includes(p), p + ' is not in .gitignore');
     }
 });
 

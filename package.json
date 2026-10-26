@@ -6,6 +6,7 @@
   "scripts": {
     "preview": "node scripts/serve.mjs",
     "build": "sh scripts/build.sh",
+    "deploy": "bash scripts/deploy.sh",
     "test": "node --test 'test/*.test.mjs'",
     "prefix": "node scripts/prefix-css.mjs",
     "devlog": "node scripts/devlog-server.mjs",

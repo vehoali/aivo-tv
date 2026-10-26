@@ -13,8 +13,8 @@ class SrcLoader extends ResourceLoader {
         // Only scripts are needed; images and fonts would need the canvas package.
         if (extname(path) !== '.js') return null;
         // The tests assert on the repository defaults, not on whatever this TV's owner put in
-        // the gitignored config.local.js.
-        if (path.endsWith('/config.local.js')) return Promise.resolve(Buffer.from(''));
+        // the gitignored config.local.js or wallpapers.local.js.
+        if (/\/(config|wallpapers)\.local\.js$/.test(path)) return Promise.resolve(Buffer.from(''));
         const file = path === '/__legacy-env.js'
             ? resolve(import.meta.dirname, 'legacy-env.js')
             : resolve(SRC, '.' + path);

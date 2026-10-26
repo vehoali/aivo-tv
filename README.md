@@ -26,7 +26,7 @@ Based on [Arn0 Launcher](https://github.com/NelsonEU/arn0-tv) by Arnaud Etienne 
 Needs Node.js 20 or newer. No TV is involved until you install it.
 
 ```sh
-cd ~/Documents/aivo-tv
+cd ~/Projects/aivo-tv
 npm install
 npm test               # 77 checks, on a modern and a 2016 engine model
 npm run preview        # http://localhost:8080
@@ -78,11 +78,12 @@ to regenerate the `-webkit-` declarations the 2016 engine needs; `npm test` fail
 
 ```sh
 npm run preview      # browser preview on :8080
+npm run deploy       # test, build, sign, install and open on the TV (docs/setup-tv.md, step 7)
 npm run build        # -> dist/aivo-launcher.wgt (unsigned)
 npm test             # syntax, legacy-engine lint, polyfills, the app on two engines, the package
 npm run prefix       # regenerate the -webkit- declarations after editing css/style.css
 npm run devlog       # receive Lab logs from the TV into logs/tv.jsonl
-node scripts/prepare-wallpapers.mjs <folder>   # regenerate wallpapers from your photos
+node scripts/prepare-wallpapers.mjs <folder>   # add your own photos as wallpapers (kept out of git)
 python3 scripts/make-static-fonts.py           # only if a font or weight changes (needs fonttools)
 ```
 
@@ -132,6 +133,21 @@ scripts/              build, preview server, devlog server, CSS prefixing, font 
 test/                 npm test; helpers/legacy-env.js models the 2016 engine
 docs/                 setup guide and 2016 compatibility notes
 ```
+
+### Your own wallpapers
+
+Put photos in a folder (landscape works best; the file name becomes the title) and run:
+
+```sh
+node scripts/prepare-wallpapers.mjs ~/Pictures/tv-wallpapers
+npm run deploy
+```
+
+They are cropped to 1920x1080 with the readability shading baked in, stripped of camera and
+location metadata, and added after the bundled wallpapers in **Settings → Background**. They
+live in `src/img/wallpapers/local/` and `src/js/wallpapers.local.js`, which are gitignored:
+your photos go into your TV builds but never into the repository (`npm test` checks the ignore
+rules are in place). Each run replaces the previous set with whatever is in the folder now.
 
 ### Settings
 

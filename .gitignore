@@ -56,3 +56,10 @@ native-snapshot.json
 .AppleDouble
 .Spotlight-V100
 .Trashes
+
+# TV address remembered by scripts/deploy.sh (per network, not shared)
+.tv-address
+
+# Your own wallpapers (scripts/prepare-wallpapers.mjs): in your TV builds, never in the repository
+src/img/wallpapers/local/
+src/js/wallpapers.local.js

@@ -5,12 +5,18 @@ import { extname, join, normalize, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..', 'src');
 
-// index.html always loads the gitignored local overrides; make sure there is something to load.
-const localConfig = join(root, 'js', 'config.local.js');
-try {
-    await access(localConfig);
-} catch {
-    await writeFile(localConfig, '/* No local overrides. See config.local.example.js. */\n');
+// index.html always loads the gitignored local files; make sure there is something to load.
+const LOCAL = {
+    'config.local.js': '/* No local overrides. See config.local.example.js. */\n',
+    'wallpapers.local.js': '/* No local wallpapers. See scripts/prepare-wallpapers.mjs. */\n'
+};
+for (const [name, stub] of Object.entries(LOCAL)) {
+    const file = join(root, 'js', name);
+    try {
+        await access(file);
+    } catch {
+        await writeFile(file, stub);
+    }
 }
 const port = Number(process.env.PORT) || 8080;
 const types = {
