@@ -1,0 +1,21 @@
+{
+  "name": "aivo-tv-launcher",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aivo Launcher: a quiet home screen for Samsung Tizen TVs, 2016 (Tizen 2.4) and newer",
+  "scripts": {
+    "preview": "node scripts/serve.mjs",
+    "build": "sh scripts/build.sh",
+    "test": "node --test 'test/*.test.mjs'",
+    "prefix": "node scripts/prefix-css.mjs",
+    "devlog": "node scripts/devlog-server.mjs",
+    "icon": "node scripts/make-icon.mjs",
+    "fetch-assets": "node scripts/fetch-assets.mjs"
+  },
+  "devDependencies": {
+    "acorn": "8.14.0",
+    "autoprefixer": "10.4.20",
+    "jsdom": "25.0.1",
+    "postcss": "8.5.31"
+  }
+}

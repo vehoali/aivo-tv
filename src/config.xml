@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets"
+        id="http://aivo.tv/launcher" version="1.0.0" viewmodes="maximized">
+    <!-- package must be exactly 10 alphanumeric characters -->
+    <!-- KEEP THIS APPLICATION ID STABLE: updates install over the existing app only while the id
+         (and the signing certificate) stay the same, which is what keeps your saved settings. -->
+    <!-- 2.3 so the 2016 (Tizen 2.4) and 2015 (2.3) TVs accept the package; newer TVs run it as-is. -->
+    <tizen:application id="AivoLnchr0.Launcher" package="AivoLnchr0" required_version="2.3"/>
+    <content src="index.html"/>
+    <icon src="icon.png"/>
+    <name>Aivo Launcher</name>
+
+    <feature name="http://tizen.org/feature/screen.size.normal.1080.1920"/>
+
+    <tizen:privilege name="http://tizen.org/privilege/application.launch"/>
+    <tizen:privilege name="http://tizen.org/privilege/application.info"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <tizen:privilege name="http://tizen.org/privilege/tv.window"/>
+    <!-- Open-Meteo request for the screen saver (js/config.js → weather) and the development log -->
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <access origin="*" subdomains="true"/>
+
+    <!-- Lets the TV start the app in the background at power-on so opening it is faster -->
+    <!-- Introduced with the 2017 firmware; a 2016 TV is expected to ignore the unknown key. -->
+    <tizen:metadata key="http://samsung.com/tv/metadata/prelaunch.support" value="true"/>
+
+    <tizen:profile name="tv-samsung"/>
+    <tizen:setting screen-orientation="landscape" context-menu="disable"
+                   background-support="disable" encryption="disable"
+                   install-location="auto" hwkey-event="enable"/>
+</widget>
