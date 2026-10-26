@@ -45,6 +45,9 @@ launching apps and switching HDMI inputs only do something on a TV.
 Tizen Studio on a Mac, the Samsung certificate, signing and installing. It is reversible by
 uninstalling the app.
 
+Once that is done, **[docs/deploy-and-run.md](docs/deploy-and-run.md)** covers everyday use:
+the preview, `npm run deploy`, opening and customising it on the TV, and troubleshooting.
+
 [docs/compatibility-2016.md](docs/compatibility-2016.md) explains what was changed for the 2016
 engine and what can only be confirmed on the TV.
 

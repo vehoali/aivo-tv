@@ -157,6 +157,10 @@ space with nothing more than *Failed to install Tizen application*.
 
 ## 8. Open it
 
+From here on, everyday use (deploying changes, customising, troubleshooting) is in
+[deploy-and-run.md](deploy-and-run.md).
+
+
 On the TV: **Home → Apps → Aivo Launcher**. Add it to the Home bar from the app's options to
 reach it in one press.
 
@@ -188,4 +192,4 @@ erases them. If the TV's address changes (a new router, say), pass the new one o
 | A blank or broken screen on the TV | set `devLogUrl: 'http://<Mac-IP>:8099/log'` in `config.local.js`, run `npm run devlog`, rebuild, reinstall and run the Lab; the log lands in `logs/tv.jsonl` |
 
 To remove the launcher: on the TV, open the app's options in **Apps** and choose **Delete**, or
-`tizen uninstall -p AivoLnchr0.Launcher -s <device>`.
+`tizen uninstall -p AivoLnchr0 -s <device>`.
